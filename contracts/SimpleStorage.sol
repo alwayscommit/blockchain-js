@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity >0.6.0;
 
 contract SimpleStorage{
@@ -17,6 +19,7 @@ contract SimpleStorage{
     }
 
     People[] public people; //dynamic array
+    mapping(string => uint256) public nameNumberMap; //returns 0 (default value) if key not found
 
     People public person = People({favNum: 2, name: "aakash"});
     
@@ -36,6 +39,7 @@ contract SimpleStorage{
     function addPerson(string memory _name, uint256 _favNum) public {
         // people.push(People({ name: _name, favNum: _favNum})); out of order mention the var name
         people.push(People(_favNum,_name)); //in order, can ignore
+        nameNumberMap[_name] = _favNum;
     }
 
 }
