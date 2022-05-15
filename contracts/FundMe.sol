@@ -11,6 +11,7 @@ contract FundMe {
     //using SafeMathChainLink for uint256;
 
     mapping(address => uint256) public addressAmountMap;
+    address[] public funders;  
     address public owner;
 
     //called as soon as the contract is deployed - good place to initialize critical info like owner, no other person can call it.
@@ -28,9 +29,9 @@ contract FundMe {
         // }
 
         //using require is better
-        // require(getConversionRate(msg.value) >= minUSD, "Spend more ETH!");
-
+        require(getConversionRate(msg.value) >= minUSD, "Spend more ETH!");
         addressAmountMap[msg.sender] = addressAmountMap[msg.sender] + msg.value;
+        funders.push(msg.sender);
         // the ETH -> USD conversion rate
     }
 
@@ -76,6 +77,12 @@ contract FundMe {
     //whoever is the message sender, withdraw funds back to their account
     function withdraw() payable onlyOwner public {
         payable(msg.sender).transfer(address(this).balance);
+        //once people have funded the smart contract/project, we can withdraw everything and update their balances to 0
+        for(uint256 funderIndex=0; funderIndex < funders.length; funderIndex++){
+            address funder = funders[funderIndex];
+            addressAmountMap[funder] = 0;
+        }
+        funders = new address[](0);
     }
 
 
