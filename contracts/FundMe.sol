@@ -28,7 +28,7 @@ contract FundMe {
         // }
 
         //using require is better
-        require(getConversionRate(msg.value) >= minUSD, "Spend more ETH!");
+        // require(getConversionRate(msg.value) >= minUSD, "Spend more ETH!");
 
         addressAmountMap[msg.sender] = addressAmountMap[msg.sender] + msg.value;
         // the ETH -> USD conversion rate
@@ -68,10 +68,13 @@ contract FundMe {
         return ethAmountInUSD;
     }
 
-    //whoever is the message sender, withdraw funds back to their account
-    function withdraw() payable public {
+    modifier onlyOwner{
+        require(msg.sender == owner);
+        _;
+    }
 
-        // require msg.sender == owner;
+    //whoever is the message sender, withdraw funds back to their account
+    function withdraw() payable onlyOwner public {
         payable(msg.sender).transfer(address(this).balance);
     }
 
