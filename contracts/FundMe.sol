@@ -1,16 +1,35 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >0.6.0;
+pragma solidity >0.6.0 <0.9.0;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+// import "@chainlink/contracts/src/v0.8/vendor/SafeMathChainLink.sol";
+
 
 contract FundMe {
+    //prevents overflow errors
+    //using SafeMathChainLink for uint256;
 
     mapping(address => uint256) public addressAmountMap;
+    address public owner;
+
+    //called as soon as the contract is deployed - good place to initialize critical info like owner, no other person can call it.
+    constructor() public {
+        owner = msg.sender;
+    }
 
     //https://docs.chain.link/
 
     function fund() public payable {
+        //$50
+        uint256 minUSD = 50 * 10**18; //gwei
+        // if(msg.value < minUSD) {
+            // revert
+        // }
+
+        //using require is better
+        require(getConversionRate(msg.value) >= minUSD, "Spend more ETH!");
+
         addressAmountMap[msg.sender] = addressAmountMap[msg.sender] + msg.value;
         // the ETH -> USD conversion rate
     }
@@ -35,17 +54,26 @@ contract FundMe {
 
                  (// to avoid the warnings of unused variables, because we only need price here,
                 // we can return empty placeholders.
-                    ,
-                    int256 answer,
-                    ,
-                    ,
-                    
+                    ,int256 answer,,,
                 ) = priceFeed.latestRoundData();
-        return uint256(answer);            
+        return uint256(answer * 10000000000);            
     }
 
-    
+    //1000000000
+    function getConversionRate(uint256 ethAmount) public view returns (uint256){
+        uint256 ethPrice = getPrice();
+        uint256 ethAmountInUSD = (ethPrice * ethAmount) / 1000000000000000000;
+        //0.000002078100000000
+        //https://eth-converter.com/
+        return ethAmountInUSD;
+    }
 
+    //whoever is the message sender, withdraw funds back to their account
+    function withdraw() payable public {
+
+        // require msg.sender == owner;
+        payable(msg.sender).transfer(address(this).balance);
+    }
 
 
 
