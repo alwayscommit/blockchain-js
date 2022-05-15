@@ -15,9 +15,37 @@ contract FundMe {
         // the ETH -> USD conversion rate
     }
 
-    function getVersion public view returns (uint256){
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419);
+    function getVersion() public view returns (uint256){
+        //interfaces compile down to ABI - Application Binary Interface
+        // ABI tells solidity and other programming languages how it can interact with another contract
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+        return priceFeed.version();
     }
+
+    function getPrice() public view returns (uint256) {
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
+        // tuple is list of objects of potentially different data types 
+                // (
+                //     uint80 roundId,
+                //     int256 answer,
+                //     uint256 startedAt,
+                //     uint256 updatedAt,
+                //     uint80 answeredInRound
+                // ) = priceFeed.latestRoundData();
+
+                 (// to avoid the warnings of unused variables, because we only need price here,
+                // we can return empty placeholders.
+                    ,
+                    int256 answer,
+                    ,
+                    ,
+                    
+                ) = priceFeed.latestRoundData();
+        return uint256(answer);            
+    }
+
+    
+
 
 
 
