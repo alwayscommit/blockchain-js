@@ -31,6 +31,7 @@ contract FundMe {
         //using require is better
         require(getConversionRate(msg.value) >= minUSD, "Spend more ETH!");
         addressAmountMap[msg.sender] = addressAmountMap[msg.sender] + msg.value;
+        //since you cannot iterate over a mapping, you maintain an array of senders
         funders.push(msg.sender);
         // the ETH -> USD conversion rate
     }
@@ -53,10 +54,9 @@ contract FundMe {
                 //     uint80 answeredInRound
                 // ) = priceFeed.latestRoundData();
 
-                 (// to avoid the warnings of unused variables, because we only need price here,
+                 // to avoid the warnings of unused variables, because we only need price here,
                 // we can return empty placeholders.
-                    ,int256 answer,,,
-                ) = priceFeed.latestRoundData();
+                (,int256 answer,,,) = priceFeed.latestRoundData();
         return uint256(answer * 10000000000);            
     }
 
@@ -82,6 +82,7 @@ contract FundMe {
             address funder = funders[funderIndex];
             addressAmountMap[funder] = 0;
         }
+        //empty the list of funders by creating a new array.
         funders = new address[](0);
     }
 
