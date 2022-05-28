@@ -1,3 +1,3 @@
-# blockchain-py
+# blockchain-js
 
-Hello from Remix
+Hello from Remix. Blockchain with JavaScript. freeCodeCamp.org. 
