@@ -29,7 +29,7 @@ contract SimpleStorage{
     }
 
     //view functions - read only, view only
-    //pure funcions - do some type of math
+    //pure funcions - do some type of math, do not read or write data
     //they don't really tansact on the blockchain, do not cost gas, can't update the state of the blockchain
     //if retrieve is called from outside the contract, it doesn't cost any gas
     //but if retrieve is called from a pure function, then the cost of retrieve function is added
