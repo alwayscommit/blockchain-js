@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
 //gives a choice on which contract to deploy
 import "./SimpleStorage.sol";
 
-contract StorageFactory is SimpleStorage {
+contract StorageFactory {
 
     SimpleStorage[] public simpleStorageArray;
 
@@ -18,7 +18,8 @@ contract StorageFactory is SimpleStorage {
         //Address
         //ABI - Application Binary Interface
 
-        SimpleStorage simpleStorage = SimpleStorage(address(simpleStorageArray[_simpleStorageIndex]));
+        // SimpleStorage simpleStorage = SimpleStorage(address(simpleStorageArray[_simpleStorageIndex]));
+        SimpleStorage simpleStorage = simpleStorageArray[_simpleStorageIndex];
         simpleStorage.store(_simpleStorageNumber);
     } 
 

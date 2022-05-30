@@ -24,7 +24,7 @@ contract SimpleStorage{
     People public person = People({favNum: 2, name: "aakash"});
     
     //
-    function store(uint256 _favNum) public {
+    function store(uint256 _favNum) public virtual {
         number = _favNum;
     }
 
