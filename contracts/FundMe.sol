@@ -2,13 +2,21 @@
 
 pragma solidity >0.6.0 <0.9.0;
 
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "./PriceConverter.sol";
+
+//https://solidity-by-example.org/
+
 // import "@chainlink/contracts/src/v0.8/vendor/SafeMathChainLink.sol";
 
 
 contract FundMe {
+
+    using PriceConverter for uint256; 
+
     //prevents overflow errors
     //using SafeMathChainLink for uint256;
+
+    uint256 public minUSD = 50 * 1e18;
 
     mapping(address => uint256) public addressAmountMap;
     address[] public funders;  
@@ -22,52 +30,21 @@ contract FundMe {
     //https://docs.chain.link/
 
     function fund() public payable {
-        //$50
-        uint256 minUSD = 50 * 10**18; //gwei
-        // if(msg.value < minUSD) {
-            // revert
-        // }
+        //require(msg.value > 1e18, "Didn't send enough ETH"); 1e18 == 1 x 10^18 or 1000000000000000000 
 
-        //using require is better
-        require(getConversionRate(msg.value) >= minUSD, "Spend more ETH!");
+        //reverts the transaction where statements before this one are reverted and the remaining gas it sent back
+        // require(getConversionRate(msg.value) >= minUSD, "Spend more ETH!");
+
+        //this is possible because we've used a library, we can run those library functions on uint256 objects 
+        //we don't pass any arguments because the object on when this function is called is considered as the first default paramter msg.value
+        require(msg.value.getConversionRate() >= minUSD, "Spend more ETH!");
         addressAmountMap[msg.sender] = addressAmountMap[msg.sender] + msg.value;
         //since you cannot iterate over a mapping, you maintain an array of senders
         funders.push(msg.sender);
         // the ETH -> USD conversion rate
     }
 
-    function getVersion() public view returns (uint256){
-        //interfaces compile down to ABI - Application Binary Interface
-        // ABI tells solidity and other programming languages how it can interact with another contract
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
-        return priceFeed.version();
-    }
-
-    function getPrice() public view returns (uint256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0x8A753747A1Fa494EC906cE90E9f37563A8AF630e);
-        // tuple is list of objects of potentially different data types 
-                // (
-                //     uint80 roundId,
-                //     int256 answer,
-                //     uint256 startedAt,
-                //     uint256 updatedAt,
-                //     uint80 answeredInRound
-                // ) = priceFeed.latestRoundData();
-
-                 // to avoid the warnings of unused variables, because we only need price here,
-                // we can return empty placeholders.
-                (,int256 answer,,,) = priceFeed.latestRoundData();
-        return uint256(answer * 10000000000);            
-    }
-
-    //1000000000
-    function getConversionRate(uint256 ethAmount) public view returns (uint256){
-        uint256 ethPrice = getPrice();
-        uint256 ethAmountInUSD = (ethPrice * ethAmount) / 1000000000000000000;
-        //0.000002078100000000
-        //https://eth-converter.com/
-        return ethAmountInUSD;
-    }
+    
 
     modifier onlyOwner{
         require(msg.sender == owner);
