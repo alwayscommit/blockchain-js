@@ -27,6 +27,6 @@ contract PriceConsumerV3 {
             /*uint timeStamp*/,
             /*uint80 answeredInRound*/
         ) = priceFeed.latestRoundData();
-        return price;
+        return price * 1e10; //why does this not cost any gas?
     }
 }

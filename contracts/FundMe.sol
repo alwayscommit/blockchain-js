@@ -16,15 +16,21 @@ contract FundMe {
     //prevents overflow errors
     //using SafeMathChainLink for uint256;
 
-    uint256 public minUSD = 50 * 1e18;
+    //constant - variables can't be changed, doesn't take storage spot, saves gas, saves approx 19000 gas
+    // 21,415 gas - constant
+    // 23,515 gas - non-constant
+    // 21,415 * 141000000000 (gas in wei) =  9.05 dollars
+    // 23,515 * 141000000000 (gas in wei) = 9.94 dollars (costs almost a dollar more if we don't use constants where necessary)
+    uint256 public constant MIN_USD = 50 * 1e18;
 
     mapping(address => uint256) public addressAmountMap;
-    address[] public funders;  
-    address public owner;
+    address[] public funders;
+    //set only once so we can mark it as immutable, saves gas similar to constants
+    address public immutable i_owner;
 
     //called as soon as the contract is deployed - good place to initialize critical info like owner, no other person can call it.
-    constructor() public {
-        owner = msg.sender;
+    constructor() {
+        i_owner = msg.sender;
     }
 
     //https://docs.chain.link/
@@ -37,7 +43,7 @@ contract FundMe {
 
         //this is possible because we've used a library, we can run those library functions on uint256 objects 
         //we don't pass any arguments because the object on when this function is called is considered as the first default paramter msg.value
-        require(msg.value.getConversionRate() >= minUSD, "Spend more ETH!");
+        require(msg.value.getConversionRate() >= MIN_USD, "Spend more ETH!");
         addressAmountMap[msg.sender] = addressAmountMap[msg.sender] + msg.value;
         //since you cannot iterate over a mapping, you maintain an array of senders
         funders.push(msg.sender);
@@ -45,7 +51,7 @@ contract FundMe {
     }
 
     modifier onlyOwner{
-        require(msg.sender == owner, "Sender is not owner");
+        require(msg.sender == i_owner, "Sender is not owner");
         _;
     }
     // _; - represents the rest of the code of the function where this modifier is being used, the position of _; matters
