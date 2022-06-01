@@ -44,12 +44,11 @@ contract FundMe {
         // the ETH -> USD conversion rate
     }
 
-    
-
     modifier onlyOwner{
         require(msg.sender == owner, "Sender is not owner");
         _;
     }
+    // _; - represents the rest of the code of the function where this modifier is being used, the position of _; matters
 
     //whoever is the message sender, withdraw funds back to their account
     function withdraw() payable onlyOwner public {
