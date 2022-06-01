@@ -28,14 +28,14 @@ library PriceConverter {
                  // to avoid the warnings of unused variables, because we only need price here,
                 // we can return empty placeholders.
                 (,int256 answer,,,) = priceFeed.latestRoundData();
-        return uint256(answer * 1e10); // 1**10 = 10000000000
+        return uint256(answer * 10000000000); // 1**10 = 10000000000
         //we multiply this number by 10 to match the wei standard            
     }
 
     //1000000000
     function getConversionRate(uint256 ethAmount) internal view returns (uint256){
         uint256 ethPrice = getPrice();
-        uint256 ethAmountInUSD = (ethPrice * ethAmount) / 1e18;
+        uint256 ethAmountInUSD = (ethPrice * ethAmount) / 1000000000000000000;
         //0.000002078100000000
         //https://eth-converter.com/
         return ethAmountInUSD;

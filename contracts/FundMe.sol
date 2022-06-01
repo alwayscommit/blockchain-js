@@ -8,6 +8,7 @@ import "./PriceConverter.sol";
 
 // import "@chainlink/contracts/src/v0.8/vendor/SafeMathChainLink.sol";
 
+error NotOwner(); 
 
 contract FundMe {
 
@@ -21,7 +22,7 @@ contract FundMe {
     // 23,515 gas - non-constant
     // 21,415 * 141000000000 (gas in wei) =  9.05 dollars
     // 23,515 * 141000000000 (gas in wei) = 9.94 dollars (costs almost a dollar more if we don't use constants where necessary)
-    uint256 public constant MIN_USD = 50 * 1e18;
+    uint256 public constant MIN_USD = 50 * 10 ** 18;
 
     mapping(address => uint256) public addressAmountMap;
     address[] public funders;
@@ -51,7 +52,9 @@ contract FundMe {
     }
 
     modifier onlyOwner{
-        require(msg.sender == i_owner, "Sender is not owner");
+        //require(msg.sender == i_owner, "Sender is not owner");
+        //custom errors are more gas efficient
+        if(msg.sender != i_owner){revert NotOwner();}
         _;
     }
     // _; - represents the rest of the code of the function where this modifier is being used, the position of _; matters
@@ -90,5 +93,13 @@ contract FundMe {
     }
 
 
+    // receive, fallback special functions
+    // even if someone sends money instead of using the fund function, this contract will still process it
+    receive() external payable {
+        fund();
+    }
 
+    fallback() external payable{
+        fund();
+    }
 }
