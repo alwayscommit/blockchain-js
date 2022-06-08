@@ -235,6 +235,8 @@ dist
 .temp
 .cache
 
+.encryptedKey.json
+
 # Docusaurus cache and generated files
 .docusaurus
 
