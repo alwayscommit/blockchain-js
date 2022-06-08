@@ -9,13 +9,15 @@ require("dotenv").config();
 async function main() {
   //compile
   const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-  // const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-  const encryptedJSON = fs.readFileSync("./.encryptedKey.json", "utf8");
-  let wallet = new ethers.Wallet.fromEncryptedJsonSync(
-    encryptedJSON,
-    process.env.PRIVATE_KEY_PASSWORD
-  );
-  wallet = await wallet.connect(provider);
+  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+
+  // A more secure approach to not store the private key in the .env file, nor the password, provide it at runtime
+  // const encryptedJSON = fs.readFileSync("./.encryptedKey.json", "utf8");
+  // let wallet = new ethers.Wallet.fromEncryptedJsonSync(
+  //   encryptedJSON,
+  //   process.env.PRIVATE_KEY_PASSWORD
+  // );
+  // wallet = await wallet.connect(provider);
   const abi = fs.readFileSync("./SimpleStorage_sol_SimpleStorage.abi", "utf8");
   const bin = fs.readFileSync("./SimpleStorage_sol_SimpleStorage.bin", "utf8");
   const contractFactory = new ethers.ContractFactory(abi, bin, wallet);
@@ -24,6 +26,7 @@ async function main() {
   // deploymentReceipt is something you get only when you wait for a transaction to be complete
   // deploymentTransaction you get when you deploy it.
   const deploymentReceipt = await contract.deployTransaction.wait(1);
+  console.log(`Contract Address: ${contract.address}`);
   // console.log("deployment transaction: ");
   // console.log(contract.deployTransaction);
   // console.log("deployment receipt: ");
@@ -49,6 +52,7 @@ async function main() {
   console.log(`Current Favorite Number: ${currentFavNum.toString()}`);
   const transactionResponse = await contract.store("7");
   const transactionReceipt = await transactionResponse.wait(1);
+
   const updatedFavNum = await contract.retrieve();
   console.log(`Updated Favorite Number: ${updatedFavNum.toString()}`);
 }
