@@ -1,0 +1,5 @@
+Hardhat Console: yarn hardhat console --network localhost
+This will allow us to directly interact with the blockchain running on localhost. 
+Run the commands directly on the console.
+Works with any network, even rinkeby, mainnet
+
