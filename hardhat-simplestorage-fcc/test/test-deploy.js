@@ -26,3 +26,8 @@ describe("SimpleStorage", function () {
     assert.equal(currentValue.toString(), expectedValue)
   })
 })
+
+//using yarn hardhat test --grep store ... can be used to run specific tests
+//it.only can also be used to run a particular function
+
+//hardhat-gas-reporter is used to calculate how much gas each transaction costs
