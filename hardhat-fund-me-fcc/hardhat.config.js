@@ -22,24 +22,34 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
+const RINKEBY_URL = process.env.RINKEBY_URL || "https://eth-rinkeby/example"
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "something"
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "something"
+const CMC_API_KEY = process.env.CMC_API_KEY || "something"
 module.exports = {
-    solidity: "0.8.8",
+    // solidity: "0.8.8",
+    solidity: {
+        compilers: [{ version: "0.8.8" }, { version: "0.6.6" }],
+    },
     defaultNetwork: "hardhat",
     networks: {
-        ropsten: {
-            url: process.env.ROPSTEN_URL || "",
-            accounts:
-                process.env.PRIVATE_KEY !== undefined
-                    ? [process.env.PRIVATE_KEY]
-                    : [],
+        rinkeby: {
+            url: RINKEBY_URL,
+            accounts: [PRIVATE_KEY],
+            chainId: 4,
+            blockConfirmations: 6,
         },
     },
-    gasReporter: {
-        enabled: process.env.REPORT_GAS !== undefined,
-        currency: "USD",
-    },
     etherscan: {
-        apiKey: process.env.ETHERSCAN_API_KEY,
+        apiKey: ETHERSCAN_API_KEY,
+    },
+    gasReporter: {
+        enabled: false,
+        outputFile: "gas-report.txt",
+        noColors: true,
+        currency: "USD",
+        coinmarketcap: CMC_API_KEY,
+        token: "MATIC",
     },
     namedAccounts: {
         deployer: {
