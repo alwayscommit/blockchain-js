@@ -26,10 +26,11 @@ contract FundMe {
     // State Variables
     uint256 public constant MIN_USD = 50 * 10**18;
 
-    mapping(address => uint256) public addressAmountMap;
-    address[] public funders;
+    //s_storageVariables
+    mapping(address => uint256) public s_addressAmountMap;
+    address[] public s_funders;
     address public immutable i_owner;
-    AggregatorV3Interface public priceFeed;
+    AggregatorV3Interface public s_priceFeed;
 
     //modifiers
     modifier onlyOwner() {
@@ -50,7 +51,7 @@ contract FundMe {
 
     constructor(address priceFeedAddress) {
         i_owner = msg.sender;
-        priceFeed = AggregatorV3Interface(priceFeedAddress);
+        s_priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 
     receive() external payable {
@@ -66,11 +67,11 @@ contract FundMe {
      */
     function fund() public payable {
         require(
-            msg.value.getConversionRate(priceFeed) >= MIN_USD,
+            msg.value.getConversionRate(s_priceFeed) >= MIN_USD,
             "You need to fund more ETH!"
         );
-        addressAmountMap[msg.sender] += msg.value;
-        funders.push(msg.sender);
+        s_addressAmountMap[msg.sender] += msg.value;
+        s_funders.push(msg.sender);
     }
 
     function withdraw() public payable onlyOwner {
@@ -82,12 +83,28 @@ contract FundMe {
         require(callSuccess, "Call failed!");
         for (
             uint256 funderIndex = 0;
+            funderIndex < s_funders.length;
+            funderIndex++
+        ) {
+            address funder = s_funders[funderIndex];
+            s_addressAmountMap[funder] = 0;
+        }
+        s_funders = new address[](0);
+    }
+
+    function cheaperWithdraw() public payable onlyOwner {
+        address[] memory funders = s_funders;
+        //mappings can't be in memory
+        for (
+            uint256 funderIndex = 0;
             funderIndex < funders.length;
             funderIndex++
         ) {
             address funder = funders[funderIndex];
-            addressAmountMap[funder] = 0;
+            s_addressAmountMap[funder] = 0;
         }
-        funders = new address[](0);
+        s_funders = new address[](0);
+        (bool success, ) = i_owner.call{value: address(this).balance}("");
+        require(success);
     }
 }
