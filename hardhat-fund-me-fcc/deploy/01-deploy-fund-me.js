@@ -26,6 +26,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const chainId = network.config.chainId
 
     let ethUSDPriceFeedAddress
+    //if it includes hardhat or localhost (if we're testing locally, then you must mock)
     if (developmentChains.includes(network.name)) {
         const ethUSDAggregator = await deployments.get("MockV3Aggregator")
         ethUSDPriceFeedAddress = ethUSDAggregator.address
