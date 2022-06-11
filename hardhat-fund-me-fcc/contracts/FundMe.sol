@@ -6,8 +6,10 @@ pragma solidity ^0.8.0;
 //imports
 import "./PriceConverter.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+//hardhat has console.log()
+// import "hardhat/console.sol";
 
-//Error Codes
+//Error Codes, best practice to include contract name to not be confused between different error codes
 error FundMe__NotOwner();
 
 //Interfaces, Libraries, Contracts

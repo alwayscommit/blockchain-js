@@ -101,5 +101,63 @@ describe("FundMe", async function () {
                 endingDeployerBalance.add(gasCost).toString()
             )
         })
+        it("allows us to withdraw with multiple funders", async function () {
+            const accounts = await ethers.getSigners()
+            //0 index is for the deployer
+            for (let i = 1; i < 6; i++) {
+                const fundMeConnectedContract = await fundMe.connect(
+                    accounts[i]
+                )
+                await fundMeConnectedContract.fund({ value: sendValue })
+            }
+
+            const startingFundMeBalance = await fundMe.provider.getBalance(
+                fundMe.address
+            )
+
+            const startingDeployerBalance = await fundMe.provider.getBalance(
+                deployer
+            )
+
+            const transactionResponse = await fundMe.withdraw()
+            const transactionReceipt = await transactionResponse.wait(1)
+            const { gasUsed, effectiveGasPrice } = transactionReceipt
+            const gasCost = gasUsed.mul(effectiveGasPrice)
+
+            const endingFundMeBalance = await fundMe.provider.getBalance(
+                fundMe.address
+            )
+            const endingDeployerBalance = await fundMe.provider.getBalance(
+                deployer
+            )
+
+            //assert
+            assert.equal(endingFundMeBalance, 0)
+            assert.equal(
+                //BigNumber.add() function is better to perform math operations, makes it easier
+                startingFundMeBalance.add(startingDeployerBalance),
+                endingDeployerBalance.add(gasCost).toString()
+            )
+
+            //make sure that funders are reset properly
+            //since the funders array should be empty, looking for an element at 0 index should throw an error
+            await expect(fundMe.funders(0)).to.be.reverted
+
+            for (i = 1; i < 6; i++) {
+                assert.equal(
+                    await fundMe.addressAmountMap(accounts[i].address),
+                    0
+                )
+            }
+        })
+
+        it("Only allows the owner to withdraw", async function () {
+            const accounts = await ethers.getSigners()
+            const attacker = accounts[1]
+            const attackerConnectedContract = await fundMe.connect(attacker)
+            await expect(
+                attackerConnectedContract.withdraw()
+            ).to.be.revertedWith("FundMe__NotOwner")
+        })
     })
 })

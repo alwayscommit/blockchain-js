@@ -44,11 +44,11 @@ module.exports = {
         apiKey: ETHERSCAN_API_KEY,
     },
     gasReporter: {
-        enabled: false,
+        enabled: true,
         outputFile: "gas-report.txt",
         noColors: true,
         currency: "USD",
-        coinmarketcap: CMC_API_KEY,
+        // coinmarketcap: CMC_API_KEY,
         token: "MATIC",
     },
     namedAccounts: {
