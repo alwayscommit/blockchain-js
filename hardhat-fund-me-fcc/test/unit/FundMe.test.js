@@ -36,7 +36,7 @@ describe("FundMe", async function () {
 
     describe("constructor", async function () {
         it("sets the v3 aggregator addresses correctly", async function () {
-            const response = await fundMe.s_priceFeed()
+            const response = await fundMe.getPriceFeed()
             assert.equal(response, mockV3Aggregator.address)
         })
     })
@@ -49,12 +49,12 @@ describe("FundMe", async function () {
         })
         it("updates the amount funded data structure", async function () {
             await fundMe.fund({ value: sendValue })
-            const response = await fundMe.s_addressAmountMap(deployer)
+            const response = await fundMe.getAddressAmount(deployer)
             assert.equal(response.toString(), sendValue.toString())
         })
-        it("updates adds funder to array of s_funders", async function () {
+        it("updates adds funder to array of getFunder", async function () {
             await fundMe.fund({ value: sendValue })
-            const response = await fundMe.s_funders(0)
+            const response = await fundMe.getFunder(0)
             assert.equal(response.toString(), deployer)
         })
     })
@@ -101,7 +101,7 @@ describe("FundMe", async function () {
                 endingDeployerBalance.add(gasCost).toString()
             )
         })
-        it("allows us to withdraw with multiple s_funders", async function () {
+        it("allows us to withdraw with multiple getFunder", async function () {
             const accounts = await ethers.getSigners()
             //0 index is for the deployer
             for (let i = 1; i < 6; i++) {
@@ -139,13 +139,13 @@ describe("FundMe", async function () {
                 endingDeployerBalance.add(gasCost).toString()
             )
 
-            //make sure that s_funders are reset properly
-            //since the s_funders array should be empty, looking for an element at 0 index should throw an error
-            await expect(fundMe.s_funders(0)).to.be.reverted
+            //make sure that getFunder are reset properly
+            //since the getFunder array should be empty, looking for an element at 0 index should throw an error
+            await expect(fundMe.getFunder(0)).to.be.reverted
 
             for (i = 1; i < 6; i++) {
                 assert.equal(
-                    await fundMe.s_addressAmountMap(accounts[i].address),
+                    await fundMe.getAddressAmount(accounts[i].address),
                     0
                 )
             }
@@ -203,7 +203,7 @@ describe("FundMe", async function () {
                 endingDeployerBalance.add(gasCost).toString()
             )
         })
-        it("allows us to withdraw with multiple s_funders", async function () {
+        it("allows us to withdraw with multiple getFunder", async function () {
             const accounts = await ethers.getSigners()
             //0 index is for the deployer
             for (let i = 1; i < 6; i++) {
@@ -241,13 +241,13 @@ describe("FundMe", async function () {
                 endingDeployerBalance.add(gasCost).toString()
             )
 
-            //make sure that s_funders are reset properly
-            //since the s_funders array should be empty, looking for an element at 0 index should throw an error
-            await expect(fundMe.s_funders(0)).to.be.reverted
+            //make sure that getFunder are reset properly
+            //since the getFunder array should be empty, looking for an element at 0 index should throw an error
+            await expect(fundMe.getFunder(0)).to.be.reverted
 
             for (i = 1; i < 6; i++) {
                 assert.equal(
-                    await fundMe.s_addressAmountMap(accounts[i].address),
+                    await fundMe.getAddressAmount(accounts[i].address),
                     0
                 )
             }

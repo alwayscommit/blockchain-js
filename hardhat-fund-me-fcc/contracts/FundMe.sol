@@ -28,9 +28,9 @@ contract FundMe {
 
     //s_storageVariables
     mapping(address => uint256) public s_addressAmountMap;
-    address[] public s_funders;
-    address public immutable i_owner;
-    AggregatorV3Interface public s_priceFeed;
+    address[] private s_funders;
+    address private immutable i_owner;
+    AggregatorV3Interface private s_priceFeed;
 
     //modifiers
     modifier onlyOwner() {
@@ -106,5 +106,23 @@ contract FundMe {
         s_funders = new address[](0);
         (bool success, ) = i_owner.call{value: address(this).balance}("");
         require(success);
+    }
+
+    function getOwner() public view returns (address) {
+        return i_owner;
+    }
+
+    //we do not want outside world to know variables like s_funders, etc because it doesn't make sense to them
+    //s_ is important for us, not them, thus we make them private and expose these public methods for the same
+    function getFunder(uint256 index) public view returns (address) {
+        return s_funders[index];
+    }
+
+    function getAddressAmount(address funder) public view returns (uint256) {
+        return s_addressAmountMap[funder];
+    }
+
+    function getPriceFeed() public view returns (AggregatorV3Interface) {
+        return s_priceFeed;
     }
 }

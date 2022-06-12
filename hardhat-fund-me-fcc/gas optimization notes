@@ -1,1 +1,3 @@
 https://docs.soliditylang.org/en/v0.8.13/internals/layout_in_storage.html
+
+With requires, we store strings that are very expensive, thus by using revert and error codes, it is cheaper
