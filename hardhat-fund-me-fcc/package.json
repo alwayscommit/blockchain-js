@@ -1,4 +1,6 @@
 {
+  "name": "hardhat-fund-me",
+  "author": "alwayscommit",
   "devDependencies": {
     "@chainlink/contracts": "^0.4.1",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
@@ -22,5 +24,13 @@
     "prettier-plugin-solidity": "^1.0.0-beta.13",
     "solhint": "^3.3.6",
     "solidity-coverage": "^0.7.16"
+  },
+  "scripts":{
+    "test": "yarn hardhat test",
+    "test:staging": "yarn hardhat test --network rinkeby",
+    "link": "yarn solhint 'contracts/*.sol",
+    "link:fix": "yarn solhint 'contracts/*.sol",
+    "format": "yarn prettier --write .",
+    "coverage": "yarn hardhat coverage"
   }
 }
