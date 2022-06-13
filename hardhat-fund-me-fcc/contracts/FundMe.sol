@@ -66,10 +66,10 @@ contract FundMe {
      *  @notice Funds this contract
      */
     function fund() public payable {
-        require(
-            msg.value.getConversionRate(s_priceFeed) >= MIN_USD,
-            "You need to fund more ETH!"
-        );
+        // require(
+        //     msg.value.getConversionRate(s_priceFeed) >= MIN_USD,
+        //     "You need to fund more ETH!"
+        // );
         s_addressAmountMap[msg.sender] += msg.value;
         s_funders.push(msg.sender);
     }
