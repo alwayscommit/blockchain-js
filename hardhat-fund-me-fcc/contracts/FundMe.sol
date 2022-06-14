@@ -104,7 +104,9 @@ contract FundMe {
             s_addressAmountMap[funder] = 0;
         }
         s_funders = new address[](0);
+
         (bool success, ) = i_owner.call{value: address(this).balance}("");
+
         require(success);
     }
 
