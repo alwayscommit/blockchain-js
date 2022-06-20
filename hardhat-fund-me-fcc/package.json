@@ -25,12 +25,16 @@
     "solhint": "^3.3.6",
     "solidity-coverage": "^0.7.16"
   },
-  "scripts":{
+  "scripts": {
     "test": "yarn hardhat test",
     "test:staging": "yarn hardhat test --network rinkeby",
     "link": "yarn solhint 'contracts/*.sol",
     "link:fix": "yarn solhint 'contracts/*.sol",
     "format": "yarn prettier --write .",
     "coverage": "yarn hardhat coverage"
+  },
+  "dependencies": {
+    "global": "^4.4.0",
+    "hardhat-shorthand": "^1.0.0"
   }
 }

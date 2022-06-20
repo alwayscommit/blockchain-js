@@ -1,0 +1,9 @@
+EVM can emit logs, eth_getLogs fetches the logs 
+logs have Events
+Events allow you to "print" stuff to this log, gas efficient as compared to a storage variable
+logs aren't accessible to smart contracts
+listen to these Events
+event indexing
+
+event types -> solidity is aware of this, indexed paramters, non-indexed paramters
+indexed paramters - up to 3 - also known as topics, much easier to search for
