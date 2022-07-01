@@ -24,9 +24,7 @@ contract EquityToken is ERC20 {
         _;
     }
 
-    constructor(address priceFeedAddress, uint256 borrowerUUID)
-        ERC20("EquityToken", "EQT")
-    {
+    constructor(address priceFeedAddress, uint256 borrowerUUID) ERC20("EquityToken", "EQT") {
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
         i_borrowerUUID = borrowerUUID;
@@ -34,5 +32,9 @@ contract EquityToken is ERC20 {
 
     function getBorrowerName() public view returns (uint256) {
         return i_borrowerUUID;
+    }
+
+    function getOwner() public view returns (address) {
+        return i_owner;
     }
 }

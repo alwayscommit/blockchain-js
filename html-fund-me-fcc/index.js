@@ -9,7 +9,7 @@ const withdrawButton = document.getElementById("withdrawButton")
 //if we write connect() here, that'd actually be a method call and incorrect
 connectButton.onclick = connect
 fundButton.onclick = fund
-balanceButton.onclick = getBalance
+balanceButton.onclick = getBorrowerUUID
 withdrawButton.onclick = withdraw
 
 async function connect() {
@@ -80,6 +80,21 @@ async function getBalance() {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const balance = await provider.getBalance(contractAddress)
     console.log(ethers.utils.formatEther(balance))
+  }
+}
+
+async function getBorrowerUUID() {
+  console.log("hi")
+  if (typeof window.ethereum != "undefined") {
+    console.log("hi")
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const contract = new ethers.Contract(contractAddress, abi, signer)
+
+    try {
+      const transactionResponse = await contract.getBorrowerName()
+      console.log(transactionResponse)
+    } catch (error) {}
   }
 }
 

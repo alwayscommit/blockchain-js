@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/blockchain/blockchain-js/demo/contracts/EquityToken.sol": {
-      "lastModificationDate": 1656672854866,
-      "contentHash": "41df071ad87d972a64a2dafca3761a5b",
+      "lastModificationDate": 1656675110706,
+      "contentHash": "680d6787ede4ecb438975d6647575c73",
       "sourceName": "contracts/EquityToken.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -263,8 +263,8 @@
       ]
     },
     "/home/blockchain/blockchain-js/demo/contracts/test/AppleMock.sol": {
-      "lastModificationDate": 1656672873276,
-      "contentHash": "48baa0a3301edce43bb3deeec1831738",
+      "lastModificationDate": 1656675719566,
+      "contentHash": "2daac70ab795b04f40f15a85c3c1df0e",
       "sourceName": "contracts/test/AppleMock.sol",
       "solcConfig": {
         "version": "0.6.6",
@@ -302,7 +302,9 @@
       "versionPragmas": [
         "^0.6.0"
       ],
-      "artifacts": []
+      "artifacts": [
+        "AppleMock"
+      ]
     },
     "/home/blockchain/blockchain-js/demo/node_modules/@chainlink/contracts/src/v0.6/tests/MockV3Aggregator.sol": {
       "lastModificationDate": 1656662910411,
