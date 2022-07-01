@@ -3,15 +3,17 @@
 //pragma
 pragma solidity ^0.8.7;
 
-import "@openzeppellin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-error FundMe__NotOwner();
+error EquityToken__NotOwner();
 
 contract EquityToken is ERC20 {
     uint256 private s_currentValuation;
+    //owner = centralized entity
     address private immutable i_owner;
-    address private immutable i_borrowerAddress;
-    string private immutable i_borrowerName;
+    //unique id of the person who wants to borrow DAI through this centralized entity
+    uint256 private immutable i_borrowerUUID;
     AggregatorV3Interface private s_priceFeed;
 
     //modifiers
@@ -22,16 +24,15 @@ contract EquityToken is ERC20 {
         _;
     }
 
-    constructor(address priceFeedAddress) ERC20("EquityToken", "ET") {
+    constructor(address priceFeedAddress, uint256 borrowerUUID)
+        ERC20("EquityToken", "EQT")
+    {
         i_owner = msg.sender;
         s_priceFeed = AggregatorV3Interface(priceFeedAddress);
+        i_borrowerUUID = borrowerUUID;
     }
 
-    function getBorrowerAddress() public view returns (address) {
-        return i_borrowerAddress;
-    }
-
-    function getBorrowerName() public view returns (string) {
-        return i_borrowerName;
+    function getBorrowerName() public view returns (uint256) {
+        return i_borrowerUUID;
     }
 }
