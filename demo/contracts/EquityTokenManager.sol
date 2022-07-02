@@ -10,6 +10,19 @@ import "./EquityToken.sol";
 contract EquityTokenManager {
     //centralized entity generating erc20 tokens against a unique person id
     mapping(uint256 => EquityToken) public personTokenMapping;
+    address public s_applePriceFeed;
+    address public s_googlePriceFeed;
+    address public s_microsoftPriceFeed;
+
+    constructor(
+        address applePriceFeed,
+        address googlePriceFeed,
+        address microsoftPriceFeed
+    ) {
+        s_applePriceFeed = applePriceFeed;
+        s_googlePriceFeed = googlePriceFeed;
+        s_microsoftPriceFeed = microsoftPriceFeed;
+    }
 
     function createToken(
         uint256 _borrowerUUID,
@@ -21,12 +34,15 @@ contract EquityTokenManager {
             _borrowerUUID,
             appleStocks,
             microsoftStocks,
-            googleStocks
+            googleStocks,
+            s_applePriceFeed,
+            s_googlePriceFeed,
+            s_microsoftPriceFeed
         );
         personTokenMapping[_borrowerUUID] = equityToken;
     }
 
-    function getValuation(uint256 _borrowerUUID) public view returns (uint256) {
+    function getValuation(uint256 _borrowerUUID) public returns (uint256) {
         return personTokenMapping[_borrowerUUID].getValuation();
     }
 

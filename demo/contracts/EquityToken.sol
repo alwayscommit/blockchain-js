@@ -15,6 +15,9 @@ contract EquityToken is ERC20 {
     //unique id of the person who wants to borrow DAI through this centralized entity
     uint256 private immutable i_borrowerUUID;
     mapping(string => uint256) s_stockPortfolio;
+    AggregatorV3Interface private s_applePriceFeed;
+    AggregatorV3Interface private s_googlePriceFeed;
+    AggregatorV3Interface private s_microsoftPriceFeed;
 
     //modifiers
     modifier onlyOwner() {
@@ -28,20 +31,50 @@ contract EquityToken is ERC20 {
         uint256 borrowerUUID,
         uint256 appleStocks,
         uint256 microsoftStocks,
-        uint256 googleStocks
+        uint256 googleStocks,
+        address applePriceFeed,
+        address googlePriceFeed,
+        address microsoftPriceFeed
     ) ERC20("EquityToken", "EQT") {
         i_owner = msg.sender;
         s_stockPortfolio["APPLE"] = appleStocks;
         s_stockPortfolio["MICROSOFT"] = microsoftStocks;
         s_stockPortfolio["GOOGLE"] = googleStocks;
         i_borrowerUUID = borrowerUUID;
+        s_applePriceFeed = AggregatorV3Interface(applePriceFeed);
+        s_googlePriceFeed = AggregatorV3Interface(googlePriceFeed);
+        s_microsoftPriceFeed = AggregatorV3Interface(microsoftPriceFeed);
+        setCurrentValuation();
+    }
+
+    function getApplePrice() internal view returns (uint256) {
+        (, int256 answer, , , ) = s_applePriceFeed.latestRoundData();
+        return uint256(answer);
+    }
+
+    function getGooglePrice() internal view returns (uint256) {
+        (, int256 answer, , , ) = s_googlePriceFeed.latestRoundData();
+        return uint256(answer);
+    }
+
+    function getMicrosoftPrice() internal view returns (uint256) {
+        (, int256 answer, , , ) = s_microsoftPriceFeed.latestRoundData();
+        return uint256(answer);
+    }
+
+    function setCurrentValuation() internal {
+        s_currentValuation =
+            (getApplePrice() * s_stockPortfolio["APPLE"]) +
+            (getGooglePrice() * s_stockPortfolio["GOOGLE"]) +
+            (getMicrosoftPrice() * s_stockPortfolio["MICROSOFT"]);
     }
 
     function getBorrowerUUID() public view returns (uint256) {
         return i_borrowerUUID;
     }
 
-    function getValuation() public view returns (uint256) {
+    function getValuation() public returns (uint256) {
+        setCurrentValuation();
         return s_currentValuation;
     }
 
