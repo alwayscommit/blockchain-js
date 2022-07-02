@@ -14,7 +14,7 @@ contract EquityToken is ERC20 {
     address private immutable i_owner;
     //unique id of the person who wants to borrow DAI through this centralized entity
     uint256 private immutable i_borrowerUUID;
-    AggregatorV3Interface private s_priceFeed;
+    mapping(string => uint256) s_stockPortfolio;
 
     //modifiers
     modifier onlyOwner() {
@@ -24,17 +24,32 @@ contract EquityToken is ERC20 {
         _;
     }
 
-    constructor(address priceFeedAddress, uint256 borrowerUUID) ERC20("EquityToken", "EQT") {
+    constructor(
+        uint256 borrowerUUID,
+        uint256 appleStocks,
+        uint256 microsoftStocks,
+        uint256 googleStocks
+    ) ERC20("EquityToken", "EQT") {
         i_owner = msg.sender;
-        s_priceFeed = AggregatorV3Interface(priceFeedAddress);
+        s_stockPortfolio["APPLE"] = appleStocks;
+        s_stockPortfolio["MICROSOFT"] = microsoftStocks;
+        s_stockPortfolio["GOOGLE"] = googleStocks;
         i_borrowerUUID = borrowerUUID;
     }
 
-    function getBorrowerName() public view returns (uint256) {
+    function getBorrowerUUID() public view returns (uint256) {
         return i_borrowerUUID;
+    }
+
+    function getValuation() public view returns (uint256) {
+        return s_currentValuation;
     }
 
     function getOwner() public view returns (address) {
         return i_owner;
+    }
+
+    function getEquityCount(string calldata equityName) public view returns (uint256) {
+        return s_stockPortfolio[equityName];
     }
 }

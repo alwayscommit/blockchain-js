@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/blockchain/blockchain-js/demo/contracts/EquityToken.sol": {
-      "lastModificationDate": 1656675110706,
-      "contentHash": "680d6787ede4ecb438975d6647575c73",
+      "lastModificationDate": 1656764847320,
+      "contentHash": "427e23c6fe6ed71b4879daf7e756433e",
       "sourceName": "contracts/EquityToken.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -477,6 +477,50 @@
       ],
       "artifacts": [
         "AggregatorV3Interface"
+      ]
+    },
+    "/home/blockchain/blockchain-js/demo/contracts/EquityTokenManager.sol": {
+      "lastModificationDate": 1656764844080,
+      "contentHash": "48fe4f805852259a3ce8ac03f6c684ed",
+      "sourceName": "contracts/EquityTokenManager.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./EquityToken.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "EquityTokenManager"
       ]
     }
   }

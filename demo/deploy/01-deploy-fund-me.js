@@ -20,8 +20,8 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     }
 
     //when going for localhost or hardhat network we want to mock external dependencies like priceFeed
-    const args = [applePriceFeed, 1234]
-    const fundMe = await deploy("EquityToken", {
+    const args = []
+    const fundMe = await deploy("EquityTokenFactory", {
         from: deployer,
         args: args,
         log: true,
@@ -35,7 +35,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     //     await verify(fundMe.address, args);
     //   }
 
-    log("EquityToken deployed...")
+    log("EquityTokenFactory deployed...")
     log("******************************************")
 }
 
