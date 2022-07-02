@@ -42,7 +42,7 @@ contract EquityTokenManager {
         personTokenMapping[_borrowerUUID] = equityToken;
     }
 
-    function getValuation(uint256 _borrowerUUID) public returns (uint256) {
+    function getValuation(uint256 _borrowerUUID) public view returns (uint256) {
         return personTokenMapping[_borrowerUUID].getValuation();
     }
 
