@@ -10,18 +10,24 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
 
-    let applePriceFeed
+    let appleMockAddress, googlePriceFeed, microsoftPriceFeed
     //if it includes hardhat or localhost (if we're testing locally, then you must mock)
     if (developmentChains.includes(network.name)) {
-        const ethUSDAggregator = await deployments.get("AppleMock")
-        applePriceFeed = ethUSDAggregator.address
+        const appleMock = await deployments.get("AppleMock")
+        appleMockAddress = appleMock.address
+        const googleMock = await deployments.get("GoogleMock")
+        googleMockAddress = googleMock.address
+        const microsoftMock = await deployments.get("MicrosoftMock")
+        microsoftMockAddress = microsoftMock.address
     } else {
-        applePriceFeed = networkConfig[chainId]["applePriceFeed"]
+        appleMockAddress = networkConfig[chainId]["applePriceFeed"]
+        googleMockAddress = networkConfig[chainId]["googlePriceFeed"]
+        microsoftMockAddress = networkConfig[chainId]["microsoftPriceFeed"]
     }
 
     //when going for localhost or hardhat network we want to mock external dependencies like priceFeed
-    const args = []
-    const fundMe = await deploy("EquityTokenFactory", {
+    const args = [appleMockAddress, googleMockAddress, microsoftMockAddress]
+    const fundMe = await deploy("EquityTokenManager", {
         from: deployer,
         args: args,
         log: true,

@@ -14,7 +14,31 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
             log: true,
             args: [],
         })
-        log("Mocks deployed...")
+        log("AppleMock deployed...")
+        log("******************************************")
+    }
+
+    if (chainId == 31337) {
+        log("Local network detected! Deploying mocks...")
+        await deploy("GoogleMock", {
+            contract: "GoogleMock",
+            from: deployer,
+            log: true,
+            args: [],
+        })
+        log("GoogleMock deployed...")
+        log("******************************************")
+    }
+
+    if (chainId == 31337) {
+        log("Local network detected! Deploying mocks...")
+        await deploy("MicrosoftMock", {
+            contract: "MicrosoftMock",
+            from: deployer,
+            log: true,
+            args: [],
+        })
+        log("MicrosoftMock deployed...")
         log("******************************************")
     }
 }

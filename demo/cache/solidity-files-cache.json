@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/blockchain/blockchain-js/demo/contracts/EquityToken.sol": {
-      "lastModificationDate": 1656764847320,
-      "contentHash": "427e23c6fe6ed71b4879daf7e756433e",
+      "lastModificationDate": 1656797741509,
+      "contentHash": "2a9a272909eec3509d2c0d432dabbb5f",
       "sourceName": "contracts/EquityToken.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -263,8 +263,8 @@
       ]
     },
     "/home/blockchain/blockchain-js/demo/contracts/test/AppleMock.sol": {
-      "lastModificationDate": 1656675719566,
-      "contentHash": "2daac70ab795b04f40f15a85c3c1df0e",
+      "lastModificationDate": 1656785418458,
+      "contentHash": "b0e18665d18c068d566cfa9a12f0c0c3",
       "sourceName": "contracts/test/AppleMock.sol",
       "solcConfig": {
         "version": "0.6.6",
@@ -480,8 +480,8 @@
       ]
     },
     "/home/blockchain/blockchain-js/demo/contracts/EquityTokenManager.sol": {
-      "lastModificationDate": 1656764844080,
-      "contentHash": "48fe4f805852259a3ce8ac03f6c684ed",
+      "lastModificationDate": 1656797734609,
+      "contentHash": "a0038c0632aac3f8588f0105ea7ca727",
       "sourceName": "contracts/EquityTokenManager.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -521,6 +521,94 @@
       ],
       "artifacts": [
         "EquityTokenManager"
+      ]
+    },
+    "/home/blockchain/blockchain-js/demo/contracts/test/MicrosoftMock.sol": {
+      "lastModificationDate": 1656785452478,
+      "contentHash": "5318368201ceff6d2d0091ead130c257",
+      "sourceName": "contracts/test/MicrosoftMock.sol",
+      "solcConfig": {
+        "version": "0.6.6",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@chainlink/contracts/src/v0.6/tests/MockV3Aggregator.sol"
+      ],
+      "versionPragmas": [
+        "^0.6.0"
+      ],
+      "artifacts": [
+        "MicrosoftMock"
+      ]
+    },
+    "/home/blockchain/blockchain-js/demo/contracts/test/GoogleMock.sol": {
+      "lastModificationDate": 1656785447608,
+      "contentHash": "3660ecfef879c418c1a3f183f20af257",
+      "sourceName": "contracts/test/GoogleMock.sol",
+      "solcConfig": {
+        "version": "0.6.6",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@chainlink/contracts/src/v0.6/tests/MockV3Aggregator.sol"
+      ],
+      "versionPragmas": [
+        "^0.6.0"
+      ],
+      "artifacts": [
+        "GoogleMock"
       ]
     }
   }
