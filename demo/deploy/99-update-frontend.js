@@ -15,7 +15,10 @@ module.exports = async function () {
 
 async function updateABI() {
     const equityTokenManager = await ethers.getContract("EquityTokenManager")
-    fs.writeFileSync(FRONTEND_LOCATION_ABI_FILE, JSON.stringify(equityTokenManager.interface))
+    fs.writeFileSync(
+        FRONTEND_LOCATION_ABI_FILE,
+        equityTokenManager.interface.format(ethers.utils.FormatTypes.json)
+    )
 }
 
 async function updateContractAddresses() {

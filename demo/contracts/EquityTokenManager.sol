@@ -9,7 +9,8 @@ import "./EquityToken.sol";
 
 contract EquityTokenManager {
     //centralized entity generating erc20 tokens against a unique person id
-    mapping(uint256 => EquityToken) public personTokenMapping;
+    mapping(address => EquityToken) public personTokenMapping;
+    address private immutable i_owner;
     address public s_applePriceFeed;
     address public s_googlePriceFeed;
     address public s_microsoftPriceFeed;
@@ -22,35 +23,49 @@ contract EquityTokenManager {
         s_applePriceFeed = applePriceFeed;
         s_googlePriceFeed = googlePriceFeed;
         s_microsoftPriceFeed = microsoftPriceFeed;
+        i_owner = msg.sender;
     }
 
     function createToken(
-        uint256 _borrowerUUID,
+        address payable borrowerAddress,
         uint256 appleStocks,
         uint256 microsoftStocks,
         uint256 googleStocks
     ) public {
         EquityToken equityToken = new EquityToken(
-            _borrowerUUID,
+            borrowerAddress,
             appleStocks,
             microsoftStocks,
             googleStocks,
             s_applePriceFeed,
             s_googlePriceFeed,
-            s_microsoftPriceFeed
+            s_microsoftPriceFeed,
+            i_owner
         );
-        personTokenMapping[_borrowerUUID] = equityToken;
+        personTokenMapping[borrowerAddress] = equityToken;
     }
 
-    function getValuation(uint256 _borrowerUUID) public view returns (uint256) {
-        return personTokenMapping[_borrowerUUID].getValuation();
+    function getValuation(address borrowerAddress) public view returns (uint256) {
+        return personTokenMapping[borrowerAddress].getValuation();
     }
 
-    function getEquityCount(uint256 _borrowerUUID, string calldata equityName)
+    function getOwner(address borrowerAddress) public view returns (address) {
+        return personTokenMapping[borrowerAddress].getOwner();
+    }
+
+    function getBalance(address owner, address account) public view returns (uint256) {
+        return personTokenMapping[owner].balanceOf(account);
+    }
+
+    function getAllowance(address owner, address spender) public view returns (uint256) {
+        return personTokenMapping[owner].allowance(owner, spender);
+    }
+
+    function getEquityCount(address borrowerAddress, string calldata equityName)
         public
         view
         returns (uint256)
     {
-        return personTokenMapping[_borrowerUUID].getEquityCount(equityName);
+        return personTokenMapping[borrowerAddress].getEquityCount(equityName);
     }
 }

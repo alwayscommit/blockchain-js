@@ -12,7 +12,8 @@ contract EquityToken is ERC20 {
     //owner = centralized entity
     address private immutable i_owner;
     //unique id of the person who wants to borrow DAI through this centralized entity
-    uint256 private immutable i_borrowerUUID;
+    // uint256 private immutable i_borrowerUUID;
+    address payable private s_borrowerAddress;
     mapping(string => uint256) s_stockPortfolio;
     AggregatorV3Interface private s_applePriceFeed;
     AggregatorV3Interface private s_googlePriceFeed;
@@ -27,22 +28,29 @@ contract EquityToken is ERC20 {
     }
 
     constructor(
-        uint256 borrowerUUID,
+        // uint256 borrowerUUID,
+        address payable borrowerAddress,
         uint256 appleStocks,
         uint256 microsoftStocks,
         uint256 googleStocks,
         address applePriceFeed,
         address googlePriceFeed,
-        address microsoftPriceFeed
+        address microsoftPriceFeed,
+        address owner
     ) ERC20("EquityToken", "EQT") {
-        i_owner = msg.sender;
+        i_owner = owner;
         s_stockPortfolio["APPLE"] = appleStocks;
         s_stockPortfolio["MICROSOFT"] = microsoftStocks;
         s_stockPortfolio["GOOGLE"] = googleStocks;
-        i_borrowerUUID = borrowerUUID;
+        s_borrowerAddress = borrowerAddress;
         s_applePriceFeed = AggregatorV3Interface(applePriceFeed);
         s_googlePriceFeed = AggregatorV3Interface(googlePriceFeed);
         s_microsoftPriceFeed = AggregatorV3Interface(microsoftPriceFeed);
+        _mint(s_borrowerAddress, 1);
+    }
+
+    function approve(address vaultManagerSpender) external {
+        this.approve(vaultManagerSpender, 1);
     }
 
     function getApplePrice() internal view returns (uint256) {
@@ -60,8 +68,12 @@ contract EquityToken is ERC20 {
         return uint256(answer);
     }
 
-    function getBorrowerUUID() public view returns (uint256) {
-        return i_borrowerUUID;
+    // function getBorrowerUUID() public view returns (uint256) {
+    // return i_borrowerUUID;
+    // }
+
+    function getBorrowerAddress() public view returns (address) {
+        return s_borrowerAddress;
     }
 
     function getValuation() public view returns (uint256) {
