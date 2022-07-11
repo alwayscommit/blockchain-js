@@ -49,10 +49,6 @@ contract EquityToken is ERC20 {
         _mint(s_borrowerAddress, 1);
     }
 
-    function approve(address vaultManagerSpender) external {
-        this.approve(vaultManagerSpender, 1);
-    }
-
     function getApplePrice() internal view returns (uint256) {
         (, int256 answer, , , ) = s_applePriceFeed.latestRoundData();
         return uint256(answer);

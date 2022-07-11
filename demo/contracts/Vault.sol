@@ -25,6 +25,7 @@ contract Vault {
         address payable borrowerAddress
     ) {
         s_token = ERC20(token);
+        s_token.approve(makerDAOAddress, 1);
         //makerdao address
         s_owner = makerDAOAddress;
         s_collateralValue = valuation;
@@ -43,10 +44,15 @@ contract Vault {
         return i_borrowerAddress;
     }
 
-    function transferEquity() public payable {
+    function drawDai() public payable {
         s_token.transferFrom(i_borrowerAddress, makerDAOAddress, 1);
-        dai = new Dai(s_collateralValue / 2, address(this));
+        dai = new Dai(s_collateralValue / 2, address(this), i_borrowerAddress);
         dai.transferFrom(makerDAOAddress, i_borrowerAddress, s_collateralValue / 2);
+    }
+
+    function depositDai(uint256 amount) public payable {
+        dai.transferFrom(i_borrowerAddress, makerDAOAddress, amount);
+        s_token.transferFrom(makerDAOAddress, i_borrowerAddress, 1);
     }
 
     function getDaiBalance(address account) public view returns (uint256) {

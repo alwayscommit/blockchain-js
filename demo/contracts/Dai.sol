@@ -9,8 +9,13 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 contract Dai is ERC20 {
     address private constant makerDAOAddress = address(0xdD870fA1b7C4700F2BD7f44238821C26f7392148);
 
-    constructor(uint256 amount, address approveVaultAddress) ERC20("DAI Token", "DAI") {
+    constructor(
+        uint256 amount,
+        address approveVaultAddress,
+        address borrowerAddress
+    ) ERC20("DAI Token", "DAI") {
         _mint(makerDAOAddress, amount);
         _approve(makerDAOAddress, approveVaultAddress, amount);
+        _approve(borrowerAddress, approveVaultAddress, amount);
     }
 }
