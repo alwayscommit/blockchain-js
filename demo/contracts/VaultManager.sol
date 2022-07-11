@@ -36,7 +36,7 @@ contract VaultManager {
         vaultTokenMapping[borrowerVault].drawDai();
     }
 
-    function getBalance(address borrowerVault, address account) public view returns (uint256) {
-        return vaultTokenMapping[borrowerVault].getBalance(account);
+    function getDaiBalance(address borrowerVault, address account) public view returns (uint256) {
+        return vaultTokenMapping[borrowerVault].getDaiBalance(account);
     }
 }

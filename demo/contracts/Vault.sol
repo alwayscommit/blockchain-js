@@ -43,13 +43,13 @@ contract Vault {
         return i_borrowerAddress;
     }
 
-    function drawDai() public payable {
+    function transferEquity() public payable {
         s_token.transferFrom(i_borrowerAddress, makerDAOAddress, 1);
-        //dai = new Dai(s_collateralValue/2);
-        //dai.transferFrom(makerDAOAddress, i_borrowerAddress, s_collateralValue/2);
+        dai = new Dai(s_collateralValue / 2, address(this));
+        dai.transferFrom(makerDAOAddress, i_borrowerAddress, s_collateralValue / 2);
     }
 
-    function getBalance(address account) public view returns (uint256) {
+    function getDaiBalance(address account) public view returns (uint256) {
         return dai.balanceOf(account);
     }
 }
