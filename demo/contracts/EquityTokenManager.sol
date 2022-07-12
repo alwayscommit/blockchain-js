@@ -14,6 +14,7 @@ contract EquityTokenManager {
     address public s_applePriceFeed;
     address public s_googlePriceFeed;
     address public s_microsoftPriceFeed;
+    uint256 private number;
 
     constructor(
         address applePriceFeed,
@@ -24,6 +25,22 @@ contract EquityTokenManager {
         s_googlePriceFeed = googlePriceFeed;
         s_microsoftPriceFeed = microsoftPriceFeed;
         i_owner = msg.sender;
+        number = 5;
+    }
+
+    function getApplePrice() public view returns (uint256) {
+        (, int256 answer, , , ) = AggregatorV3Interface(s_applePriceFeed).latestRoundData();
+        return uint256(answer);
+    }
+
+    function getGooglePrice() public view returns (uint256) {
+        (, int256 answer, , , ) = AggregatorV3Interface(s_googlePriceFeed).latestRoundData();
+        return uint256(answer);
+    }
+
+    function getMicrosoftPrice() public view returns (uint256) {
+        (, int256 answer, , , ) = AggregatorV3Interface(s_microsoftPriceFeed).latestRoundData();
+        return uint256(answer);
     }
 
     function createToken(
@@ -43,6 +60,18 @@ contract EquityTokenManager {
             i_owner
         );
         personTokenMapping[borrowerAddress] = equityToken;
+    }
+
+    function getApplePrice(address borrowerAddress) internal view returns (uint256) {
+        return personTokenMapping[borrowerAddress].getApplePrice();
+    }
+
+    function getGooglePrice(address borrowerAddress) internal view returns (uint256) {
+        return personTokenMapping[borrowerAddress].getGooglePrice();
+    }
+
+    function getMicrosoftPrice(address borrowerAddress) internal view returns (uint256) {
+        return personTokenMapping[borrowerAddress].getMicrosoftPrice();
     }
 
     function getValuation(address borrowerAddress) public view returns (uint256) {

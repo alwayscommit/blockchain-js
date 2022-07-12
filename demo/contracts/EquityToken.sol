@@ -49,17 +49,17 @@ contract EquityToken is ERC20 {
         _mint(s_borrowerAddress, 1);
     }
 
-    function getApplePrice() internal view returns (uint256) {
+    function getApplePrice() public view returns (uint256) {
         (, int256 answer, , , ) = s_applePriceFeed.latestRoundData();
         return uint256(answer);
     }
 
-    function getGooglePrice() internal view returns (uint256) {
+    function getGooglePrice() public view returns (uint256) {
         (, int256 answer, , , ) = s_googlePriceFeed.latestRoundData();
         return uint256(answer);
     }
 
-    function getMicrosoftPrice() internal view returns (uint256) {
+    function getMicrosoftPrice() public view returns (uint256) {
         (, int256 answer, , , ) = s_microsoftPriceFeed.latestRoundData();
         return uint256(answer);
     }

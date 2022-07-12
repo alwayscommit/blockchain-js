@@ -43,6 +43,17 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     log("EquityTokenFactory deployed...")
     log("******************************************")
+
+    const args1 = []
+    const vault = await deploy("VaultManager", {
+        from: deployer,
+        args: args1,
+        log: true,
+        waitConfirmations: network.config.blockConfirmations || 1,
+    })
+
+    log("VaultManager deployed...")
+    log("******************************************")
 }
 
 module.exports.tags = ["all", "fundme"]

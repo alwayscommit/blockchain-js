@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/blockchain/blockchain-js/demo/contracts/EquityToken.sol": {
-      "lastModificationDate": 1657038966227,
-      "contentHash": "66f912b3b5a6dd78cb26293155e2cc6a",
+      "lastModificationDate": 1657630190074,
+      "contentHash": "66471d4782188cd25eb809b9fbf949d5",
       "sourceName": "contracts/EquityToken.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -263,8 +263,8 @@
       ]
     },
     "/home/blockchain/blockchain-js/demo/contracts/EquityTokenManager.sol": {
-      "lastModificationDate": 1657025690007,
-      "contentHash": "f7a4c261340870176112a2fe745b0d9b",
+      "lastModificationDate": 1657633865294,
+      "contentHash": "83b6a131fe7df8fe9aaea796e3aff103",
       "sourceName": "contracts/EquityTokenManager.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -307,8 +307,8 @@
       ]
     },
     "/home/blockchain/blockchain-js/demo/contracts/test/AppleMock.sol": {
-      "lastModificationDate": 1656785418458,
-      "contentHash": "b0e18665d18c068d566cfa9a12f0c0c3",
+      "lastModificationDate": 1657633557144,
+      "contentHash": "62f68a5a036dd21b81c091dc442cca8a",
       "sourceName": "contracts/test/AppleMock.sol",
       "solcConfig": {
         "version": "0.6.6",
@@ -609,6 +609,141 @@
       ],
       "artifacts": [
         "GoogleMock"
+      ]
+    },
+    "/home/blockchain/blockchain-js/demo/contracts/Dai.sol": {
+      "lastModificationDate": 1657544077346,
+      "contentHash": "d2b127a2937dde4be92e4726b497bc1b",
+      "sourceName": "contracts/Dai.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "Dai"
+      ]
+    },
+    "/home/blockchain/blockchain-js/demo/contracts/Vault.sol": {
+      "lastModificationDate": 1657544073066,
+      "contentHash": "281bef2c09411d2fdbffddd6184bffd2",
+      "sourceName": "contracts/Vault.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./EquityToken.sol",
+        "./Dai.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "Vault"
+      ]
+    },
+    "/home/blockchain/blockchain-js/demo/contracts/VaultManager.sol": {
+      "lastModificationDate": 1657544064616,
+      "contentHash": "02172d9814dbe3944c6a9f5b957f653f",
+      "sourceName": "contracts/VaultManager.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [
+        "./EquityToken.sol",
+        "./Vault.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.7"
+      ],
+      "artifacts": [
+        "VaultManager"
       ]
     }
   }

@@ -1,5 +1,5 @@
 import { useWeb3Contract } from "react-moralis"
-import { abi, contractAddresses } from "../constants"
+import { equityABI, vaultABI, vaultContractAddress, equityContractAddress } from "../constants"
 import { useMoralis } from "react-moralis"
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
@@ -7,7 +7,8 @@ import { ethers } from "ethers"
 export default function EquityLoan() {
     const { isWeb3Enabled, chainId: chainIdHex } = useMoralis()
     const chainId = parseInt(chainIdHex)
-    const equityLoanAddress = chainId in contractAddresses ? contractAddresses[chainId][0] : null
+    const equityLoanAddress =
+        chainId in equityContractAddress ? equityContractAddress[chainId][0] : null
 
     const [apple, setApple] = useState("")
     const [google, setGoogle] = useState("")
@@ -15,14 +16,16 @@ export default function EquityLoan() {
     const [newBorrowerId, setNewBorrowerId] = useState("")
     const [borrowerId, setBorrowerId] = useState("")
     const [valuation, setValuation] = useState("")
-    const [something, setSomething] = useState("")
+    const [applePrice, setApplePrice] = useState("")
+    const [googlePrice, setGooglePrice] = useState("")
+    const [microsoftPrice, setMicrosoftPrice] = useState("")
 
     const { runContractFunction: createToken } = useWeb3Contract({
-        abi: abi,
+        abi: equityABI,
         contractAddress: equityLoanAddress,
         functionName: "createToken",
         params: {
-            _borrowerUUID: newBorrowerId,
+            borrowerAddress: newBorrowerId,
             appleStocks: apple,
             microsoftStocks: microsoft,
             googleStocks: google,
@@ -30,28 +33,47 @@ export default function EquityLoan() {
     })
 
     const { runContractFunction: getValuation } = useWeb3Contract({
-        abi: abi,
+        abi: equityABI,
         contractAddress: equityLoanAddress,
         functionName: "getValuation",
         params: {
-            _borrowerUUID: borrowerId,
+            borrowerAddress: borrowerId,
         },
     })
 
-    const { runContractFunction: getNumber } = useWeb3Contract({
-        abi: abi,
+    const { runContractFunction: getApplePrice } = useWeb3Contract({
+        abi: equityABI,
         contractAddress: equityLoanAddress,
-        functionName: "getNumber",
+        functionName: "getApplePrice",
         params: {},
     })
 
+    const { runContractFunction: getGooglePrice } = useWeb3Contract({
+        abi: equityABI,
+        contractAddress: equityLoanAddress,
+        functionName: "getGooglePrice",
+        params: {},
+    })
+
+    const { runContractFunction: getMicrosoftPrice } = useWeb3Contract({
+        abi: equityABI,
+        contractAddress: equityLoanAddress,
+        functionName: "getMicrosoftPrice",
+        params: {},
+    })
+
+    async function updateUIValues() {
+        const appleValue = (await getApplePrice()).toString()
+        const googleValue = (await getGooglePrice()).toString()
+        const microsoftValue = (await getMicrosoftPrice()).toString()
+        setApplePrice(appleValue)
+        setMicrosoftPrice(microsoftValue)
+        setGooglePrice(googleValue)
+    }
+
     useEffect(() => {
         if (isWeb3Enabled) {
-            async function updateUI() {
-                const someNumber = (await getNumber()).toString()
-                setSomething(someNumber)
-            }
-            updateUI()
+            updateUIValues()
         }
     }, [isWeb3Enabled])
 
@@ -63,7 +85,7 @@ export default function EquityLoan() {
                     <input
                         type="text"
                         value={newBorrowerId}
-                        placeholder="Enter Borrower ID"
+                        placeholder="Enter Borrower Address"
                         onChange={(e) => {
                             setNewBorrowerId(e.currentTarget.value)
                         }}
@@ -71,7 +93,7 @@ export default function EquityLoan() {
                     <input
                         type="text"
                         value={apple}
-                        placeholder="No. of Apple Stocks"
+                        placeholder="Apple Stocks"
                         onChange={(e) => {
                             setApple(e.currentTarget.value)
                         }}
@@ -79,7 +101,7 @@ export default function EquityLoan() {
                     <input
                         type="text"
                         value={google}
-                        placeholder="No. of Google Stocks"
+                        placeholder="Google Stocks"
                         onChange={(e) => {
                             setGoogle(e.currentTarget.value)
                         }}
@@ -87,7 +109,7 @@ export default function EquityLoan() {
                     <input
                         type="text"
                         value={microsoft}
-                        placeholder="No. of Microsoft Stocks"
+                        placeholder="Microsoft Stocks"
                         onChange={(e) => {
                             setMicrosoft(e.currentTarget.value)
                         }}
@@ -103,7 +125,7 @@ export default function EquityLoan() {
                     <input
                         type="text"
                         value={borrowerId}
-                        placeholder="Enter Borrower ID"
+                        placeholder="Enter Borrower Address"
                         onChange={(e) => {
                             setBorrowerId(e.currentTarget.value)
                         }}
@@ -116,7 +138,7 @@ export default function EquityLoan() {
                     >
                         Get Valuation
                     </button>
-                    Current Valuation : {valuation}
+                    <bR></bR>Current Valuation : {valuation}
                 </div>
             ) : (
                 <div>No Equity Contract Detected</div>
@@ -125,8 +147,14 @@ export default function EquityLoan() {
                 <br />
                 <br />
                 <br />
+                <b>Current Stock Prices</b>
                 <br />
-                Update Stocks Mock Value
+                Apple Stock Value : {applePrice}
+                <br />
+                Google Stock Value : {googlePrice}
+                <br />
+                Microsoft Stock Value : {microsoftPrice}
+                <br />
             </div>
         </div>
     )
