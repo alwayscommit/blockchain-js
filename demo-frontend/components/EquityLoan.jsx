@@ -9,6 +9,7 @@ export default function EquityLoan() {
     const chainId = parseInt(chainIdHex)
     const equityLoanAddress =
         chainId in equityContractAddress ? equityContractAddress[chainId][0] : null
+    const vaultAddress = chainId in vaultContractAddress ? vaultContractAddress[chainId][0] : null
 
     const [apple, setApple] = useState("")
     const [google, setGoogle] = useState("")
@@ -19,6 +20,7 @@ export default function EquityLoan() {
     const [applePrice, setApplePrice] = useState("")
     const [googlePrice, setGooglePrice] = useState("")
     const [microsoftPrice, setMicrosoftPrice] = useState("")
+    const [equityToken, setEquityToken] = useState("")
 
     const { runContractFunction: createToken } = useWeb3Contract({
         abi: equityABI,
@@ -30,6 +32,12 @@ export default function EquityLoan() {
             microsoftStocks: microsoft,
             googleStocks: google,
         },
+    })
+
+    const { runContractFunction: getNumber } = useWeb3Contract({
+        abi: vaultABI,
+        contractAddress: vaultAddress,
+        functionName: "getNumber",
     })
 
     const { runContractFunction: getValuation } = useWeb3Contract({
@@ -60,6 +68,13 @@ export default function EquityLoan() {
         contractAddress: equityLoanAddress,
         functionName: "getMicrosoftPrice",
         params: {},
+    })
+
+    const { runContractFunction: getToken } = useWeb3Contract({
+        abi: equityABI,
+        contractAddress: equityLoanAddress,
+        functionName: "getToken",
+        params: { borrowerAddress: borrowerId },
     })
 
     async function updateUIValues() {
@@ -136,9 +151,29 @@ export default function EquityLoan() {
                             setValuation(currentValue)
                         }}
                     >
-                        Get Valuation
+                        Get Valuation &nbsp;
+                    </button>{" "}
+                    Current Valuation : {valuation} &nbsp;
+                    <button
+                        onClick={async function () {
+                            let token = (await getToken()).toString()
+                            setEquityToken(token)
+                        }}
+                    >
+                        Get Token
+                    </button>{" "}
+                    Equity Token : {equityToken}
+                    <br></br>
+                    <br></br>
+                    <input type="text" value={equityToken} placeholder="Enter Token Address" />
+                    <button
+                        onClick={async function () {
+                            const number = (await getNumber()).toString()
+                            console.log(number)
+                        }}
+                    >
+                        Create Vault &nbsp;
                     </button>
-                    <bR></bR>Current Valuation : {valuation}
                 </div>
             ) : (
                 <div>No Equity Contract Detected</div>

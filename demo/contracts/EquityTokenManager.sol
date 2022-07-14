@@ -14,7 +14,7 @@ contract EquityTokenManager {
     address public s_applePriceFeed;
     address public s_googlePriceFeed;
     address public s_microsoftPriceFeed;
-    uint256 private number;
+    uint256 public number;
 
     constructor(
         address applePriceFeed,
@@ -26,6 +26,10 @@ contract EquityTokenManager {
         s_microsoftPriceFeed = microsoftPriceFeed;
         i_owner = msg.sender;
         number = 5;
+    }
+
+    function getNumber() public view returns (uint256) {
+        return number;
     }
 
     function getApplePrice() public view returns (uint256) {
@@ -84,6 +88,11 @@ contract EquityTokenManager {
 
     function getBalance(address owner, address account) public view returns (uint256) {
         return personTokenMapping[owner].balanceOf(account);
+    }
+
+    function getToken(address borrowerAddress) public view returns (address) {
+        EquityToken etoken = personTokenMapping[borrowerAddress];
+        return address(etoken);
     }
 
     function getAllowance(address owner, address spender) public view returns (uint256) {

@@ -263,8 +263,8 @@
       ]
     },
     "/home/blockchain/blockchain-js/demo/contracts/EquityTokenManager.sol": {
-      "lastModificationDate": 1657633865294,
-      "contentHash": "83b6a131fe7df8fe9aaea796e3aff103",
+      "lastModificationDate": 1657803958109,
+      "contentHash": "dc9efc7921a1303d5c4c5981c293932c",
       "sourceName": "contracts/EquityTokenManager.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -702,8 +702,8 @@
       ]
     },
     "/home/blockchain/blockchain-js/demo/contracts/VaultManager.sol": {
-      "lastModificationDate": 1657544064616,
-      "contentHash": "02172d9814dbe3944c6a9f5b957f653f",
+      "lastModificationDate": 1657804138909,
+      "contentHash": "71841955148097100144f1931fb8d80b",
       "sourceName": "contracts/VaultManager.sol",
       "solcConfig": {
         "version": "0.8.7",
@@ -737,13 +737,56 @@
       },
       "imports": [
         "./EquityToken.sol",
-        "./Vault.sol"
+        "./Vault.sol",
+        "hardhat/console.sol"
       ],
       "versionPragmas": [
         "^0.8.7"
       ],
       "artifacts": [
         "VaultManager"
+      ]
+    },
+    "/home/blockchain/blockchain-js/demo/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1656662474481,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.7",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
       ]
     }
   }

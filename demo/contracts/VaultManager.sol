@@ -5,19 +5,30 @@ pragma solidity ^0.8.7;
 
 import "./EquityToken.sol";
 import "./Vault.sol";
+import "hardhat/console.sol";
 
 //get number of apple, microsoft, google stocks
 
 contract VaultManager {
     mapping(address => Vault) public vaultTokenMapping;
+    uint256 public number;
 
-    function createVault(EquityToken token) public {
+    constructor() {
+        number = 5;
+    }
+
+    function createVault(address token) public {
         Vault vault = new Vault(
             address(token),
-            token.getValuation(),
-            payable(token.getBorrowerAddress())
+            EquityToken(token).getValuation(),
+            payable(EquityToken(token).getBorrowerAddress())
         );
-        vaultTokenMapping[token.getBorrowerAddress()] = vault;
+        vaultTokenMapping[EquityToken(token).getBorrowerAddress()] = vault;
+    }
+
+    function getNumber() public view returns (uint256) {
+        console.log("hello");
+        return number;
     }
 
     function getValuation(address borrowerVault) public view returns (uint256) {
