@@ -5,6 +5,7 @@ pragma solidity ^0.8.7;
 
 import "./EquityToken.sol";
 import "./Dai.sol";
+import "hardhat/console.sol";
 
 contract Vault {
     //makerdao
@@ -13,7 +14,7 @@ contract Vault {
     uint256 private s_collateralValue;
     address payable private immutable i_borrowerAddress;
     address payable private constant makerDAOAddress =
-        payable(0xdD870fA1b7C4700F2BD7f44238821C26f7392148);
+        payable(0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC);
     Dai private dai;
 
     // uint256 private debtValue;
@@ -50,8 +51,8 @@ contract Vault {
         dai.transferFrom(makerDAOAddress, i_borrowerAddress, s_collateralValue / 2);
     }
 
-    function depositDai(uint256 amount) public payable {
-        dai.transferFrom(i_borrowerAddress, makerDAOAddress, amount);
+    function liquidate() public payable {
+        dai.burn(i_borrowerAddress, s_collateralValue / 2);
         s_token.transferFrom(makerDAOAddress, i_borrowerAddress, 1);
     }
 

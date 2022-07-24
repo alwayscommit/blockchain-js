@@ -1,5 +1,17 @@
 import { useWeb3Contract } from "react-moralis"
-import { equityABI, vaultABI, vaultContractAddress, equityContractAddress } from "../constants"
+import {
+    equityABI,
+    vaultABI,
+    vaultContractAddress,
+    equityContractAddress,
+    equityTokenABI,
+    appleABI,
+    appleAddress,
+    googleABI,
+    googleAddress,
+    microsoftABI,
+    microsoftAddress,
+} from "../constants"
 import { useMoralis } from "react-moralis"
 import { useEffect, useState } from "react"
 import { ethers } from "ethers"
@@ -10,6 +22,9 @@ export default function EquityLoan() {
     const equityLoanAddress =
         chainId in equityContractAddress ? equityContractAddress[chainId][0] : null
     const vaultAddress = chainId in vaultContractAddress ? vaultContractAddress[chainId][0] : null
+    const appleAddr = chainId in appleAddress ? appleAddress[chainId][0] : null
+    const googleAddr = chainId in googleAddress ? googleAddress[chainId][0] : null
+    const microsoftAddr = chainId in microsoftAddress ? microsoftAddress[chainId][0] : null
 
     const [apple, setApple] = useState("")
     const [google, setGoogle] = useState("")
@@ -21,6 +36,11 @@ export default function EquityLoan() {
     const [googlePrice, setGooglePrice] = useState("")
     const [microsoftPrice, setMicrosoftPrice] = useState("")
     const [equityToken, setEquityToken] = useState("")
+    const [vault, setVault] = useState("")
+    const [borrowerDai, setBorrowerDai] = useState("0")
+    const [borrowerEquity, setBorrowerEquity] = useState("0")
+    const [makerAddress, setMakerAddress] = useState("0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC")
+    const [makerEquity, setMakerEquity] = useState("0")
 
     const { runContractFunction: createToken } = useWeb3Contract({
         abi: equityABI,
@@ -34,10 +54,46 @@ export default function EquityLoan() {
         },
     })
 
-    const { runContractFunction: getNumber } = useWeb3Contract({
+    const { runContractFunction: createVault } = useWeb3Contract({
         abi: vaultABI,
         contractAddress: vaultAddress,
-        functionName: "getNumber",
+        functionName: "createVault",
+        params: {
+            token: equityToken,
+        },
+    })
+
+    const { runContractFunction: approve } = useWeb3Contract({
+        abi: equityTokenABI,
+        contractAddress: equityToken,
+        functionName: "approve",
+        params: {
+            spender: vault,
+            amount: 1,
+        },
+    })
+
+    const { runContractFunction: drawDai } = useWeb3Contract({
+        abi: vaultABI,
+        contractAddress: vaultAddress,
+        functionName: "drawDai",
+        params: {
+            borrowerVault: borrowerId,
+        },
+    })
+
+    const { runContractFunction: getBorrowerDai } = useWeb3Contract({
+        abi: vaultABI,
+        contractAddress: vaultAddress,
+        functionName: "getDaiBalance",
+        params: { borrowerVault: borrowerId, account: borrowerId },
+    })
+
+    const { runContractFunction: getMakerDai } = useWeb3Contract({
+        abi: vaultABI,
+        contractAddress: vaultAddress,
+        functionName: "getDaiBalance",
+        params: { borrowerVault: borrowerId, account: makerAddress },
     })
 
     const { runContractFunction: getValuation } = useWeb3Contract({
@@ -77,6 +133,55 @@ export default function EquityLoan() {
         params: { borrowerAddress: borrowerId },
     })
 
+    const { runContractFunction: getBorrowerEqBalance } = useWeb3Contract({
+        abi: equityABI,
+        contractAddress: equityLoanAddress,
+        functionName: "getBalance",
+        params: { owner: borrowerId, account: borrowerId },
+    })
+
+    const { runContractFunction: getMakerEqBalance } = useWeb3Contract({
+        abi: equityABI,
+        contractAddress: equityLoanAddress,
+        functionName: "getBalance",
+        params: { owner: borrowerId, account: makerAddress },
+    })
+
+    const { runContractFunction: getVault } = useWeb3Contract({
+        abi: vaultABI,
+        contractAddress: vaultAddress,
+        functionName: "getVault",
+        params: { borrowerVault: borrowerId },
+    })
+
+    const { runContractFunction: liquidate } = useWeb3Contract({
+        abi: vaultABI,
+        contractAddress: vaultAddress,
+        functionName: "liquidate",
+        params: { borrowerVault: borrowerId },
+    })
+
+    const { runContractFunction: updateApple } = useWeb3Contract({
+        abi: appleABI,
+        contractAddress: appleAddr,
+        functionName: "updateAnswer",
+        params: { _answer: 79 },
+    })
+
+    const { runContractFunction: updateGoogle } = useWeb3Contract({
+        abi: googleABI,
+        contractAddress: googleAddr,
+        functionName: "updateAnswer",
+        params: { _answer: 1187 },
+    })
+
+    const { runContractFunction: updateMicrosoft } = useWeb3Contract({
+        abi: microsoftABI,
+        contractAddress: microsoftAddr,
+        functionName: "updateAnswer",
+        params: { _answer: 140 },
+    })
+
     async function updateUIValues() {
         const appleValue = (await getApplePrice()).toString()
         const googleValue = (await getGooglePrice()).toString()
@@ -84,6 +189,27 @@ export default function EquityLoan() {
         setApplePrice(appleValue)
         setMicrosoftPrice(microsoftValue)
         setGooglePrice(googleValue)
+    }
+
+    async function getBalances() {
+        const borrowerDaiVal = (await getBorrowerDai()).toString()
+        setBorrowerDai(borrowerDaiVal)
+        const borrowerEqVal = (await getBorrowerEqBalance()).toString()
+        setBorrowerEquity(borrowerEqVal)
+        const makerEqVal = (await getMakerEqBalance()).toString()
+        setMakerEquity(makerEqVal)
+    }
+
+    async function updateStockPrices() {
+        await updateApple()
+        await updateGoogle()
+        await updateMicrosoft()
+        updateUIValues()
+    }
+
+    async function getBorrowerEq() {
+        const borrowerEqVal = (await getBorrowerEqBalance()).toString()
+        setBorrowerEquity(borrowerEqVal)
     }
 
     useEffect(() => {
@@ -134,7 +260,7 @@ export default function EquityLoan() {
                             await createToken()
                         }}
                     >
-                        Deposit Equity
+                        Tokenize Borrower's Equity Portfolio
                     </button>
                     <br></br>
                     <input
@@ -151,7 +277,7 @@ export default function EquityLoan() {
                             setValuation(currentValue)
                         }}
                     >
-                        Get Valuation &nbsp;
+                        Valuate Portfolio &nbsp;
                     </button>{" "}
                     Current Valuation : {valuation} &nbsp;
                     <button
@@ -160,26 +286,97 @@ export default function EquityLoan() {
                             setEquityToken(token)
                         }}
                     >
-                        Get Token
+                        Borrower's Equity Token
                     </button>{" "}
-                    Equity Token : {equityToken}
+                    Token Address : {equityToken}
                     <br></br>
                     <br></br>
-                    <input type="text" value={equityToken} placeholder="Enter Token Address" />
+                    <input
+                        type="text"
+                        value={equityToken}
+                        placeholder="Enter Equity Token Address"
+                    />
                     <button
                         onClick={async function () {
-                            const number = (await getNumber()).toString()
-                            console.log(number)
+                            await createVault()
                         }}
                     >
-                        Create Vault &nbsp;
+                        Deposit Equity Portfolio in Vault &nbsp;
+                    </button>{" "}
+                    &nbsp;
+                    <button
+                        onClick={async function () {
+                            console.log(borrowerId)
+                            let vault = (await getVault()).toString()
+                            setVault(vault)
+                        }}
+                    >
+                        Borrower's Vault
+                    </button>{" "}
+                    Vault Address : {vault}
+                    <br></br>
+                    <br></br>
+                    <button
+                        onClick={async function () {
+                            await drawDai()
+                        }}
+                    >
+                        Draw DAI Token
                     </button>
+                    <br></br>
+                    <br></br>
+                    <button
+                        onClick={async function () {
+                            await getBorrowerEq()
+                        }}
+                    >
+                        Get Borrower Equity Balance
+                    </button>
+                    &nbsp;
+                    <button
+                        onClick={async function () {
+                            await getBalances()
+                        }}
+                    >
+                        Get Balances
+                    </button>
+                    <br />
+                    Borrower's DAI Balance : {borrowerDai}
+                    <br />
+                    Borrower's Equity Balance : {borrowerEquity}
+                    <br />
+                    MakerDAO's Equity Balance : {makerEquity}
+                    <br></br>
+                    <br></br>
+                    <button
+                        onClick={async function () {
+                            await liquidate()
+                        }}
+                    >
+                        Liquidate
+                    </button>
+                    <br></br>
+                    <br></br>
+                    <button
+                        onClick={async function () {
+                            await approve()
+                        }}
+                    >
+                        Approve Token Exchange between Borrower and MakerDAO
+                    </button>{" "}
                 </div>
             ) : (
                 <div>No Equity Contract Detected</div>
             )}
             <div>
-                <br />
+                <br></br>
+                <button
+                    onClick={async function () {
+                        await updateStockPrices()
+                    }}
+                >
+                    Update Stock Prices
+                </button>
                 <br />
                 <br />
                 <b>Current Stock Prices</b>

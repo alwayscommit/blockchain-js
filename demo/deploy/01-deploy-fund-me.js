@@ -54,6 +54,23 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 
     log("VaultManager deployed...")
     log("******************************************")
+
+    const args2 = [
+        "0xdD870fA1b7C4700F2BD7f44238821C26f7392148",
+        1,
+        1,
+        1,
+        appleMockAddress,
+        googleMockAddress,
+        microsoftMockAddress,
+        "0xdd870fa1b7c4700f2bd7f44238821c26f7392148",
+    ]
+    const equityToken = await deploy("EquityToken", {
+        from: deployer,
+        args: args2,
+        log: true,
+        waitConfirmations: network.config.blockConfirmations || 1,
+    })
 }
 
 module.exports.tags = ["all", "fundme"]

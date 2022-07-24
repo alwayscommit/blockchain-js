@@ -11,11 +11,6 @@ import "hardhat/console.sol";
 
 contract VaultManager {
     mapping(address => Vault) public vaultTokenMapping;
-    uint256 public number;
-
-    constructor() {
-        number = 5;
-    }
 
     function createVault(address token) public {
         Vault vault = new Vault(
@@ -26,13 +21,12 @@ contract VaultManager {
         vaultTokenMapping[EquityToken(token).getBorrowerAddress()] = vault;
     }
 
-    function getNumber() public view returns (uint256) {
-        console.log("hello");
-        return number;
-    }
-
     function getValuation(address borrowerVault) public view returns (uint256) {
         return vaultTokenMapping[borrowerVault].getValuation();
+    }
+
+    function getVault(address borrowerVault) public view returns (address) {
+        return address(vaultTokenMapping[borrowerVault]);
     }
 
     function getOwner(address borrowerVault) public view returns (address) {
@@ -43,11 +37,16 @@ contract VaultManager {
         return vaultTokenMapping[borrowerVault].getBorrowerAddress();
     }
 
+    function liquidate(address borrowerVault) public payable {
+        vaultTokenMapping[borrowerVault].liquidate();
+    }
+
     function drawDai(address borrowerVault) public {
         vaultTokenMapping[borrowerVault].drawDai();
     }
 
     function getDaiBalance(address borrowerVault, address account) public view returns (uint256) {
+        console.log("DAI");
         return vaultTokenMapping[borrowerVault].getDaiBalance(account);
     }
 }
